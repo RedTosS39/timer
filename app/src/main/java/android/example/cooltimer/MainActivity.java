@@ -32,25 +32,9 @@ public class MainActivity extends AppCompatActivity {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                int minutes = progress / 60;
-                int seconds = progress - minutes * 60;
 
-                String minutesStr = "";
-                String secondsStr = "";
-
-                if(minutes < 10) {
-                    minutesStr = "0" + minutes;
-                } else {
-                    minutesStr = String.valueOf(minutes);
-                }
-
-                if(seconds < 10) {
-                    secondsStr = "0" + seconds;
-                } else {
-                    secondsStr = String.valueOf(seconds);
-                }
-
-                textView.setText(minutesStr + " : " + secondsStr);
+                long progressMillis = progress * 1000;
+                updateTimer(progressMillis);
             }
 
             @Override
@@ -63,37 +47,40 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
     }
-}
 
-//timer 1
-        /*
-        Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
+    public void start(View view) {
+         new CountDownTimer(seekBar.getProgress() * 1000, 1000) {
             @Override
-            public void run() {
-                handler.postDelayed(this, 1000);
-                Log.d("timer", "delay");
-            }
-        };
-        handler.post(runnable);
-
- */
-//timer 2
-        /*  CountDownTimer countDownTimer = new CountDownTimer(10000, 1000) {
-            @Override
-            public void onTick(long mill
-            isUntilFinished) {
-
-                Log.d("timer", String.valueOf(millisUntilFinished) + " seconds ");
+            public void onTick(long millisUntilFinished) {
+                updateTimer(millisUntilFinished);
             }
 
             @Override
             public void onFinish() {
-                Log.d("timer", "Finish!");
-            }
-        };
 
-        countDownTimer.start();
-        */
+            }
+        }.start();
+    }
+
+    private  void updateTimer(long millisUntilFinished) {
+        int minutes = (int) millisUntilFinished / 60000;
+        int seconds = (int) (millisUntilFinished / 1000 - minutes * 60);
+
+        String minutesStr = "";
+        String secondsStr = "";
+
+        if(minutes < 10) {
+            minutesStr = "0" + minutes;
+        } else {
+            minutesStr = String.valueOf(minutes);
+        }
+
+        if(seconds < 10) {
+            secondsStr = "0" + seconds;
+        } else {
+            secondsStr = String.valueOf(seconds);
+        }
+        textView.setText(minutesStr + " : " + secondsStr);
+    }
+}
