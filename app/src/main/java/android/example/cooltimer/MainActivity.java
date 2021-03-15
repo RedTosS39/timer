@@ -3,6 +3,7 @@ package android.example.cooltimer;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -15,18 +16,23 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
     private SeekBar seekBar;
     private TextView textView;
+    private boolean isTimerOn;
+    private Button button;
+    private CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        button = findViewById(R.id.button);
+        isTimerOn = false;
         seekBar = findViewById(R.id.seekBar);
         textView = findViewById(R.id.textView);
 
         //set Max for SeekBar(sec)
         seekBar.setMax(600);
-        seekBar.setProgress(60);
+        seekBar.setProgress(30);
 
         //set text by seekBar progress
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -50,7 +56,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void start(View view) {
-         new CountDownTimer(seekBar.getProgress() * 1000, 1000) {
+        if(!isTimerOn) {
+            button.setText("STOP");
+            seekBar.setEnabled(false);
+            isTimerOn = true;
+            timer();
+        } else {
+            resetTimer();
+        }
+    }
+
+    private void timer () {
+        countDownTimer = new CountDownTimer(seekBar.getProgress() * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 updateTimer(millisUntilFinished);
@@ -58,9 +75,21 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-
+                MediaPlayer mediaPlayer;
+                mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.bell_sound);
+                mediaPlayer.start();
+                resetTimer();
             }
         }.start();
+    }
+
+    private void resetTimer() {
+        countDownTimer.cancel();
+        textView.setText("00 : 30");
+        button.setText("START");
+        seekBar.setEnabled(true);
+        seekBar.setProgress(30);
+        isTimerOn = false;
     }
 
     private  void updateTimer(long millisUntilFinished) {
