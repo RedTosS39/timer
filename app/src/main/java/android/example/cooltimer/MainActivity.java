@@ -2,9 +2,11 @@ package android.example.cooltimer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import android.content.ClipData;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -81,9 +83,33 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                MediaPlayer mediaPlayer;
-                mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.bell_sound);
-                mediaPlayer.start();
+                SharedPreferences sharedPreferences =
+                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                if(sharedPreferences.getBoolean("enable_sound", true)) {
+                    String melodyName = sharedPreferences.getString("timer_melody", "bell");
+                    switch (melodyName) {
+                        case "bell": {
+                            MediaPlayer mediaPlayer;
+                            mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.bell_sound);
+                            mediaPlayer.start();
+                            break;
+                        }
+                        case "alarm": {
+                            MediaPlayer mediaPlayer;
+                            mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.alarm_siren_sound);
+                            mediaPlayer.start();
+                            break;
+                        }
+                        case "bip": {
+                            MediaPlayer mediaPlayer;
+                            mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.bip_sound);
+                            mediaPlayer.start();
+                            break;
+                        }
+                    }
+
+                }
+                
                 resetTimer();
             }
         }.start();

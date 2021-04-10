@@ -1,8 +1,13 @@
 package android.example.cooltimer;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 public class AboutActivity extends AppCompatActivity {
 
@@ -10,5 +15,15 @@ public class AboutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) { NavUtils.navigateUpFromSameTask(this);}
+        return super.onOptionsItemSelected(item);
     }
 }

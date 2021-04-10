@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="preference_timer_melody">
+        <item>Bell</item>
+        <item>Alarm</item>
+        <item>Bip</item>
+    </array>
+
+    <array name="preference_timer_melody_value">
+        <item>bell</item>
+        <item>alarm</item>
+        <item>bip</item>
+    </array>
+</resources>
